@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 width="100%" gap="20" paddingLeft="20" verticalAlign="middle">
+	
+	<fx:Script>
+		<![CDATA[
+			
+			import spark.events.IndexChangeEvent;
+			
+			public function getPackage():String {
+				return selectPackage.selectedItem as String;	
+			}
+			
+			public function getRelease():String {
+				return selectRelease.selectedItem as String;
+			}
+			
+			private function getPackagesForSelectedRelease():void {
+				selectPackage.dataProvider = LView.packageArr;
+				trace("TODO: implement ContextSelection::getPackagesForSelectedRelease()");
+			}
+			
+			private function doInit():void {
+				getPackagesForSelectedRelease();
+				selectPackage.selectedIndex = 0;
+			}
+
+			protected function selectRelease_changeHandler(event:IndexChangeEvent):void
+			{
+				getPackagesForSelectedRelease();
+			}
+			
+			protected function selectPackage_changeHandler(event:IndexChangeEvent):void
+			{
+			}
+		]]>
+	</fx:Script>
+	
+	<s:Label text="Release:" />
+	
+	<s:DropDownList id="selectRelease" 
+					dataProvider="{LView.releaseArr}" 
+					selectedIndex="0"
+					change="selectRelease_changeHandler(event)"
+					creationComplete="doInit()" />
+	
+	<s:Label text="Package:" />
+	
+	<s:DropDownList id="selectPackage" change="selectPackage_changeHandler(event)" />
+	
+	<s:Label text="Package Status:" />
+</s:HGroup>

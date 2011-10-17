@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	creationComplete="init(event)"
+	rollOver="mouseOverHandler(event)"
+	rollOut="mouseOutHandler(event)"
+	implements="lviewer.components.Filter"
+	mouseChildren="true"
+	>
+	<s:layout>
+		<s:VerticalLayout gap="0" />
+	</s:layout>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import flashx.textLayout.operations.RedoOperation;
+			
+			import mx.events.FlexEvent;
+			
+			import spark.components.Scroller;
+			import spark.components.VGroup;
+			import spark.components.supportClasses.GroupBase;
+			
+			public var childContainer:GroupBase;
+			private var selectedChildContainer:VGroup;
+	
+			private var _numSelected:int;
+		
+			var _filterName:String;
+			
+			var values:Object;
+			
+			var container:FilterList;
+
+			public function setFilterList(filterList:FilterList):void {
+				container = filterList;
+			}
+			
+			public function set filterName(newName:String):void {
+				_filterName = newName;
+			}
+			
+			public function getName():String {
+				return _filterName;
+			}
+			
+			public function getSelectedValues():Object {
+				return values;
+			}
+			
+			public function numSelected():int {
+				return _numSelected;
+			}
+			
+			public function filterClicked(filterItem:FilterItem):void {
+				var filterClicked:String = filterItem.getName();
+				if(values[filterClicked] != null) {
+					_numSelected--;
+					delete values[filterClicked];
+					filterItem.setState("default");
+				}
+				else {
+					_numSelected++;
+					values[filterClicked] = filterItem;
+					filterItem.setState("selected");
+				}
+				if(container != null) {
+					container.filterClicked(this);
+				}
+			}
+
+			protected function init(event:FlexEvent):void
+			{
+				values = new Object();
+				
+				for(var i:int = 0; i<childContainer.numElements; i++) {
+					var child:FilterItem = childContainer.getElementAt(i) as FilterItem;
+					child.setFilter(this);
+				}
+			}
+
+			protected function mouseOverHandler(event:MouseEvent):void
+			{
+				for(var i:int = 0; i<childContainer.numElements; i++) {
+					var child:FilterItem = childContainer.getElementAt(i) as FilterItem;
+					if(child.getState() == "deselected") {
+						child.setState("default");
+					}
+				}
+			}
+
+			protected function mouseOutHandler(event:MouseEvent):void
+			{
+				if(_numSelected == 0) {
+					return;
+				}
+				for(var i:int = 0; i<childContainer.numElements; i++) {
+					var child:FilterItem = childContainer.getElementAt(i) as FilterItem;
+					if(child.getState() == "default") {
+						child.setState("deselected");
+					}
+				}
+			}
+
+		]]>
+	</fx:Script>
+</s:Panel>

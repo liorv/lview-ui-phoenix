@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	implements="lviewer.components.Filter"
+	creationComplete="init(event)"
+	mouseChildren="true"
+	dropShadowVisible="false"
+	width="100%"
+	>
+	<s:layout>
+		<s:VerticalLayout gap="0" />
+	</s:layout>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import lviewer.components.ComponentFactory;
+			import lviewer.components.FilterItem;
+			import lviewer.components.FilterList;
+			import lviewer.components.filteritems.BasicFilterItem;
+			
+			import mx.core.UIComponent;
+			import mx.events.FlexEvent;
+			
+			import spark.components.Group;
+			
+			public var container:FilterList;
+			
+			public var childContainer:Group;
+	
+			internal var _numSelected:int;
+		
+			internal var _filterName:String;
+			
+			internal var _allValues:Vector.<String> = new Vector.<String>();
+			
+			internal var _values:Object = new Object();
+
+			public function setFilterList(filterList:FilterList):void {
+				container = filterList;
+			}
+			
+			public function getName():String {
+				return _filterName;
+			}
+			
+			public function setName(name:String):void {
+				_filterName = name;
+				title = name;
+			}
+			
+			public function setValues(values:Vector.<String>):void {
+				childContainer.removeAllElements();
+				_values = new Object();
+				_numSelected = 0;
+				_allValues = values;
+				
+				var fitem:UIComponent;
+				for(var i:int=0; i<values.length; i++) {
+					fitem = (values.length < 6) ?
+						ComponentFactory.createFXFilterItem(values[i]) :
+						ComponentFactory.createFilterItem(values[i]);
+					childContainer.addElement(fitem);
+				}
+				if(values.length == 1) {
+					fitem.mouseEnabled = false;
+					var selectedValues:Object = new Object();
+					selectedValues[values[0]] = 1;
+					setSelected(selectedValues);
+				}
+				init(null);
+			}
+			
+			public function setSelected(selectedValues:Object):void {
+				_numSelected = 0;
+				for(var i:int = 0; i<childContainer.numElements; i++) {
+					var filterItem:FilterItem = childContainer.getElementAt(i) as FilterItem;
+					if(selectedValues[filterItem.getName()] != null) {
+						filterItem.setState(  "selected"  );
+						_values[filterItem.getName()] = filterItem;
+						_numSelected++;						
+					}
+					else {
+						delete _values[filterItem.getName()];
+						filterItem.setState( "deselected" );
+						_numSelected--
+					}
+				}
+			}
+			
+			public function getAllValues():Vector.<String> {
+				return _allValues;
+			}
+			
+			public function getSelectedValues():Object {
+				return _values;
+			}
+			
+			public function numSelected():int {
+				return _numSelected;
+			}
+
+			protected function init(event:FlexEvent):void
+			{
+				for(var i:int = 0; i<childContainer.numElements; i++) {
+					var filterItem:FilterItem = childContainer.getElementAt(i) as FilterItem;
+					if(filterItem != null)
+						filterItem.setFilter(this);
+				}
+			}
+			
+			public function filterClicked(filterItem:FilterItem):void {
+			}
+			
+		]]>
+	</fx:Script>
+</s:Panel>

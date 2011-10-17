@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Button xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx"
+				implements="lviewer.components.FilterItem"
+				click="onClick(event)"
+				width="100%"				
+				height.default="24"	height.selected="24" height.deselected="0"
+				chromeColor="#D7D6D6" chromeColor.selected="#BFF7AD" chromeColor.deselected="#D7D6D6"
+				
+				label="{getLabel()}" 
+				fontSize="12"
+				addedEffect="{myBlur}"
+				resizeEffect="{myResize}"
+				>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<mx:Blur id="myBlur"
+			blurXFrom="18" blurYFrom="18" blurXTo="0" blurYTo="0"
+			duration="300" />
+		
+		<s:Resize id="myResize" target="{this}" duration="200">				
+		</s:Resize>
+	</fx:Declarations>
+	
+	<s:states>
+		<s:State name="default">
+		</s:State>
+		<s:State name="deselected">
+		</s:State>
+		<s:State name="selected">
+		</s:State>
+	</s:states>
+	
+	<s:transitions>
+		<s:Transition id="myTransition" effect="{myResize}"/>
+	</s:transitions>
+	
+	<fx:Script>
+		<![CDATA[
+			import lviewer.components.Filter;
+			import mx.effects.IEffect;
+			import mx.events.FlexEvent;
+			
+			[Bindable]
+			private var _filterItemName:String;
+			
+			[Bindable]
+			private var _filterItemMatches:int;
+			
+			private var container:Filter;
+			
+			private function getLabel():String {
+				return _filterItemName;
+			}
+			
+			public function set filterItemName(newName:String):void {
+				_filterItemName = newName;
+				label = newName;
+			}
+			
+			public function set filterItemMatches(numMatches:int):void {
+				_filterItemMatches = numMatches;
+			}
+			
+			public function getName():String {
+				return _filterItemName;
+			}
+			
+			public function getNumMatching():int {
+				return _filterItemMatches;
+			}
+			
+			public function getState():String {
+				return currentState;
+			}
+			
+			public function setState(state:String):void {
+				currentState = state;
+			}
+			
+			public function setFilter(filter:Filter):void {
+				container = filter;
+			}
+			
+			public function onClick(e:MouseEvent):void
+			{
+				if(container == null) {	return; }			
+				container.filterClicked(this);
+			}
+		]]>
+	</fx:Script>
+</s:Button>

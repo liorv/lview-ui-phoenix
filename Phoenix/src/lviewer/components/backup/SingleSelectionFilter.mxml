@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 implements="lviewer.components.Filter"
+		 creationComplete="init(event)"
+		 >
+	<s:layout>
+		<s:VerticalLayout gap="0" />
+	</s:layout>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import spark.components.supportClasses.GroupBase;
+			
+			public var childContainer:GroupBase;
+			
+			private var container:FilterList;
+			
+			private var _filterName:String;
+			
+			public function setFilterList(filterList:FilterList):void {
+				container = filterList;
+			}
+			
+			public function set filterName(newName:String):void {
+				_filterName = newName;
+			}
+			
+			private var lastSelectedFilterItem:FilterItem;
+			
+			public function getName():String {
+				return _filterName;
+			}
+			
+			public function getSelectedValues():Object {
+				var values:Object = new Object();
+				var selected:String = (currentState == "default") ? "*" : lastSelectedFilterItem.getName();
+				values[selected] = 1;
+				return values;
+			}
+			
+			public function numSelected():int {
+				return (lastSelectedFilterItem == null) ? 0 : 1;
+			}
+			
+			public function filterClicked(filterItem:FilterItem):void {
+				if(filterItem == lastSelectedFilterItem && numSelected() == 1) {
+					lastSelectedFilterItem = null;
+					
+					for(var i:int = 0; i<childContainer.numElements; i++) {
+						var child:FilterItem = childContainer.getElementAt(i) as FilterItem;
+						child.setState("default");
+					}
+				}
+				else if(filterItem != lastSelectedFilterItem && numSelected() == 0){
+					lastSelectedFilterItem = filterItem;
+					for(var i:int = 0; i<childContainer.numElements; i++) {
+						var child:FilterItem = childContainer.getElementAt(i) as FilterItem;
+						var state:String = (child == lastSelectedFilterItem) ?
+							"selected" : "deselected";
+						child.setState( state );
+					}					
+				}
+				if(container != null) {
+					container.filterClicked(this);
+				}
+			}
+
+			protected function init(event:FlexEvent):void
+			{
+				for(var i:int = 0; i<childContainer.numElements; i++) {
+					var child:FilterItem = childContainer.getElementAt(i) as FilterItem;
+					child.setFilter(this);
+				}
+			}
+
+		]]>
+	</fx:Script>
+</s:Panel>

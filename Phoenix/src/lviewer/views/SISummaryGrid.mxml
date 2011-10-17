@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 height="100%" width="100%" >
+	<!--
+	The purpose for this grid is to show SI specific streams (StreamRunner/AlgoDemo) that executed on package.
+	i.e. This is not for component results.
+	-->
+	
+	<s:layout>
+		<s:HorizontalLayout/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<mx:DataGrid id="siGrid" dataProvider="{LView.siSummary}" width="100%" height="100%">
+		<mx:columns>
+			<fx:Script>
+				<![CDATA[
+				import lviewer.components.renderer.BoolStatusItem;
+				]]>
+			</fx:Script>
+			<mx:DataGridColumn headerText="Stream" dataField="stream"/>
+			<mx:DataGridColumn headerText="Status" dataField="status" 
+							   itemRenderer="lviewer.components.renderer.BoolStatusItem"/>
+			<mx:DataGridColumn dataField="win"
+							   itemRenderer="lviewer.components.renderer.BoolStatusItem"/>
+			<mx:DataGridColumn dataField="linux"
+							   itemRenderer="lviewer.components.renderer.BoolStatusItem"/>
+		</mx:columns>
+	</mx:DataGrid>
+	
+</s:Group>

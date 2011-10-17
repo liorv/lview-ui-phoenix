@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<!-- itemRenderers\InlineDGRenderer.mxml -->
+<s:Application
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:lviewer="lviewer.*"
+	width="100%" height="100%" pageTitle="LView" xmlns:views="lviewer.views.*" xmlns:components="lviewer.components.*" xmlns:containers="lviewer.components.containers.*"
+	>
+	<fx:Script>
+		<![CDATA[		
+			import lviewer.common.StatMap;
+			import lviewer.components.ComponentFactory;
+			import lviewer.components.containers.ComponentView;
+			import lviewer.components.containers.DataPanel;
+			import lviewer.components.Filter;
+			import lviewer.components.FilterList;
+			import lviewer.components.FilterSelectionChangedEvent;
+			import lviewer.components.filterlists.BasicFilterList;
+			import lviewer.components.filterlists.ComponentViewFilterList;
+			import lviewer.components.filters.FilterPanelBase;
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.ItemResponder;
+			import mx.containers.Grid;
+			import mx.controls.Alert;
+			import mx.controls.DataGrid;
+			import mx.controls.Text;
+			import mx.core.UIComponent;
+			import mx.events.FlexEvent;
+			import mx.rpc.*;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.ArrayUtil;
+			
+			import services.LView;
+			
+			import spark.components.Group;
+			import spark.components.Scroller;
+			import spark.components.TextArea;
+			
+			import valueObjects.*;
+
+			
+			[Bindable]
+			[Embed(source="assets/bad.png")]
+			public static var badPic:Class;
+			
+			[Bindable]
+			[Embed(source="assets/good.png")]
+			public static var goodPic:Class;
+			
+			[Bindable]
+			[Embed(source="assets/puzzle_piece.png")]
+			public static var componentPic:Class;
+			
+			[Bindable]
+			public static var minPassRate:Number = 95;
+			
+			[Bindable]
+			public static var siSummary:ArrayCollection = new ArrayCollection([
+				{ stream:"Basel 2", status:"95", win:"94", linux:"99" },
+				{ stream:"Market/Credit", status:"50", win:"50", linux:"50" },
+				{ stream:"BSRM", status:"50", win:"50", linux:"50" },
+				{ stream:"Collateral", status:"50", win:"50", linux:"50" },
+				{ stream:"Smoke", status:"50", win:"50", linux:"50" }
+			]);
+			
+			[Bindable]
+			public static var componentsSummary:ArrayCollection = new ArrayCollection([
+				{ component:"PCRE", status:"95", win:"94", linux:"99"},
+				{ component:"ASE", status:"94", win:"99", linux:"90"}
+			]);
+			
+			
+			/**
+			 * feature tree:
+			 * ============
+			 * feature.component.requirement.test
+			 */
+			
+			[Bindable]
+			public static var myFeatures:ArrayCollection = new ArrayCollection([
+				{ cq:"ACR0001234", desc:"we need to do X1 to achieve Y1", state:"Development", owner:"James" },
+				{ cq:"ACR0001235", desc:"we need to do X2 to achieve Y2", state:"Delivered", owner:"Mike" },
+				{ cq:"ACR0001236", desc:"we need to do X3 to achieve Y3", state:"Closed", owner:"Jim" }
+			]);
+			
+			[Bindable]
+			public static var packageArr:ArrayCollection = new ArrayCollection(["0101", "0100", "0099"]);
+			
+			[Bindable]
+			public static var releaseArr:ArrayCollection = new ArrayCollection(["4.7.0"]);
+
+		]]>
+	</fx:Script>
+	
+	<containers:ComponentView width="100%" height="100%">
+		
+	</containers:ComponentView>
+</s:Application>

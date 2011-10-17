@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 dropShadowVisible="false"
+		 width="100%" skinClass="lviewer.components.renderer.DataPanelSkin">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import lviewer.components.renderer.RateItemRenderer;
+			import lviewer.components.renderer.StringItemRenderer;
+			import lviewer.components.renderer.TimeItemRenderer;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import mx.events.DataGridEvent;
+			import mx.events.ListEvent;
+			import mx.utils.ObjectUtil;
+			
+			public function clear():void {				
+				table.columns = new Array();	
+			}
+			
+			public function initCols(colNames:Vector.<String>, records:Vector.<Object>):void {				
+				// construct col objects
+				
+				var timePattern:RegExp = /time/i;
+				var ratePattern:RegExp = /rate/i;
+				
+				if(colNames.length > 0  && table.columnCount != colNames.length) {
+					var cols:Array = new Array();
+					
+					for each(var colName:String in colNames) {
+						var dgc:DataGridColumn = new DataGridColumn(colName);
+						
+						dgc.headerText = colLabel(colName);
+							
+						if(colName.search(timePattern) > -1)
+							dgc.itemRenderer = new ClassFactory(TimeItemRenderer);
+						else if(colName.search(ratePattern) > -1)
+							dgc.itemRenderer = new ClassFactory(RateItemRenderer);
+						else
+							dgc.itemRenderer = new ClassFactory(StringItemRenderer);			
+						cols.push(dgc);
+					}					
+					table.columns = cols;
+				}										
+				table.dataProvider = new ArrayCollection(vectorToArray(records));
+				sortTable(0);
+			}
+			
+			private function sortTable(colIdx:int):void {
+				var e:DataGridEvent = new DataGridEvent(DataGridEvent.HEADER_RELEASE, false, true,
+					colIdx,	// The zero-based index of the column to sort in the DataGrid object's columns array.
+					null, 0, null, null, 0);
+				table.dispatchEvent(e);
+			}
+			
+			private function colLabel(fieldName:String):String {
+				if(fieldName == "passRate") return "Pass Rate";
+				if(fieldName == "totalTime") return "Total Time";
+				return fieldName.charAt(0).toUpperCase() + fieldName.substr(1);
+			}
+			
+			private function vectorToArray(v:Vector.<Object>): Array
+			{
+				var len:int = v.length;
+				var ret:Array = new Array(len);
+				for (var i:int = 0; i < len; ++i)
+					ret[i] = v[i];
+				return ret;
+			}
+		]]>
+	</fx:Script>
+	<s:controlBarContent>
+		<s:Button id="minimizeButton" label="-" />
+		<s:Button id="maximizeButton" label="+" />
+	</s:controlBarContent>
+	
+	<mx:DataGrid id="table" width="100%" height="100%" selectable="true" doubleClickEnabled="true">
+	</mx:DataGrid>
+</s:Panel>

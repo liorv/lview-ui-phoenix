@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:MXDataGridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+						  xmlns:s="library://ns.adobe.com/flex/spark" 
+						  xmlns:mx="library://ns.adobe.com/flex/mx" 
+						  focusEnabled="true"
+						  >
+	<s:VGroup id="vg" width="100%" top="5" left="5" right="5" bottom="5" horizontalAlign="center">
+		<s:Label id="lblData" 
+				 text="{computeString()}" verticalAlign="{verticalAlign}" horizontalCenter="{vg}"/>	
+	</s:VGroup>
+	
+	
+	<fx:Script>
+		<![CDATA[
+			import spark.components.DataRenderer;
+			
+			[Bindable]
+			public var verticalAlign:String = "middle";
+			
+			public var type:String = "string";
+			
+			private var labelStr:String;
+			
+			[Bindable(event="dataChange")]
+			private function computeString():String 
+			{
+				if(dataGridListData == null || 
+					dataGridListData.label == null ||
+					dataGridListData.label == " " || 
+					dataGridListData.label.length == 0)
+					labelStr = null;
+				else
+					labelStr = dataGridListData.label; 
+				
+				if(type == "string")
+					return processAsString();
+				if(type == "double")
+					return processAsDouble();
+				if(type == "time")
+					return processAsTime();
+				return "type?["+type+"]";
+			}
+			
+			private function processAsTime():String {
+				if(labelStr == null) 
+					return "-";
+				else {
+					var totalSeconds:Number = parseFloat(dataGridListData.label);
+					var hours:int = totalSeconds / 3600;
+					var rem:int = totalSeconds - (3600*hours);
+					var mins:int = rem / 60;
+					var seconds:int = rem - (mins*60);
+					return hours+":"+mins+"."+seconds+" ("+totalSeconds+")";
+				}
+			}
+			
+			private function processAsDouble():String {
+				if(labelStr == null) 
+					return "0";
+				else
+					return dataGridListData.label;
+			}
+			
+			private function processAsString():String {
+				if(labelStr == null) 
+					return "*";
+				else
+					return dataGridListData.label;
+			}
+			
+		]]>
+	</fx:Script>
+</s:MXDataGridItemRenderer>

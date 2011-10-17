@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 implements="lviewer.components.FilterList"
+		 creationComplete="init(event)"
+		 width="100%"
+		 height="170"
+		 >
+	<s:layout>
+		<s:HorizontalLayout gap="10"/>
+	</s:layout>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import lviewer.components.Filter;
+			import lviewer.components.FilterSelectionChangedEvent;
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			
+			public function numFilters():int {
+				return numChildren;
+			}
+			
+			public function getFilter(idx:int):Filter {
+				if(idx >= numFilters() || idx < 0) {
+					throw new Error("invalid index passed to BasicFilterList::getFilterName");
+				} 
+				return (getChildAt(idx) as Filter);
+			}
+			
+			public function filterClicked(filter:Filter):void {
+				dispatchEvent(new FilterSelectionChangedEvent(this));
+			}
+
+			protected function init(event:FlexEvent):void
+			{
+				for(var i:int = 0; i<numChildren; i++) {
+					var child:Filter = getChildAt(i) as Filter;
+					child.setFilterList(this);
+				}
+			}
+
+
+		]]>
+	</fx:Script>
+</s:Group>

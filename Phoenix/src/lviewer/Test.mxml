@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<s:Application
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:lviewer="lviewer.*"
+	width="100%" height="100%" pageTitle="LView" xmlns:views="lviewer.views.*" xmlns:components="lviewer.components.*"
+	creationComplete="init()"
+	 xmlns:services="services.*">
+	<fx:Script>
+		<![CDATA[		
+			import flash.net.registerClassAlias;
+			
+			import mx.collections.ItemResponder;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.rpc.AsyncToken;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import services.LView;
+			
+			import valueObjects.*;
+
+			
+			private function myHandler(event:ResultEvent, token:AsyncToken):void 
+			{
+				var c:Holder = event.result as Holder;
+				trace("Test1 good? : "+(c.t1 is Test1));
+				trace("Test2 good? : "+(c.t2 is Test2));
+			}
+			
+			private function onFault(event:FaultEvent, token:AsyncToken):void {
+				trace("LIOR>>> "+event.fault.faultString,event.fault.faultCode);
+			}
+			
+			private function init():void {
+				registerClassAlias("lior.lview.fxdata.Holder", valueObjects.Holder);
+				registerClassAlias("lior.lview.fxdata.Test1", valueObjects.Test1);
+				registerClassAlias("lior.lview.fxdata.Test2", valueObjects.Test2);
+				
+				getStuff();
+			}
+			
+			protected function getStuff():void
+			{				
+				getStuffResult.token = lView.getStuff();
+			}
+			
+
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:CallResponder id="getStuffResult" result="myHandler(event, null)"/>
+		<services:LView id="lView" fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"/>
+	</fx:Declarations>
+	
+	<s:VGroup id="vg">		
+	</s:VGroup>
+	
+</s:Application>

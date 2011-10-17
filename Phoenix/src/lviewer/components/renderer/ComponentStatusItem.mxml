@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:MXDataGridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+						  xmlns:s="library://ns.adobe.com/flex/spark" 
+						  xmlns:mx="library://ns.adobe.com/flex/mx" 
+						  focusEnabled="false"
+						  >
+	<fx:Script>
+		<![CDATA[
+			
+			private function getImage():Class {
+				return LView.componentPic;
+			}
+		]]>
+	</fx:Script>
+	
+	<s:HGroup gap="20" verticalAlign="middle" height="100%" width="100%">
+		<mx:Image id="componentPic" source="{getImage()}" width="32" height="32"/>
+		
+		<s:Label id="componentName"
+				 text="{data.component}"
+				 verticalAlign="middle" fontSize="12" fontWeight="bold" />
+	</s:HGroup>
+	
+</s:MXDataGridItemRenderer>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:MXDataGridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+						  xmlns:s="library://ns.adobe.com/flex/spark" 
+						  xmlns:mx="library://ns.adobe.com/flex/mx" 
+						  focusEnabled="true"
+						  >
+	<s:VGroup id="vg" width="100%" top="5" left="5" right="5" bottom="5" horizontalAlign="center">
+		<s:Label id="lblData" 
+				 text="{computeString()}" verticalAlign="middle" horizontalCenter="{vg}"/>	
+	</s:VGroup>
+	
+	
+	<fx:Script>
+		<![CDATA[
+			import spark.components.DataRenderer;
+			
+			[Bindable(event="dataChange")]
+			private function computeString():String 
+			{
+				if(dataGridListData == null || 
+					dataGridListData.label == null ||
+					dataGridListData.label == " " || 
+					dataGridListData.label.length == 0)
+					return "-";
+				else {
+					var totalSeconds:Number = parseFloat(dataGridListData.label);
+					var hours:int = totalSeconds / 3600;
+					var rem:int = totalSeconds - (3600*hours);
+					var mins:int = rem / 60;
+					var seconds:int = rem - (mins*60);
+					return ((hours > 9) ? hours : "0"+hours) + ":" + 
+						((mins > 9) ? mins : "0"+mins) + ":" + 
+						((seconds > 9) ? seconds : "0"+seconds) +
+						" ("+int(totalSeconds)+")";
+				}
+			}
+			
+		]]>
+	</fx:Script>
+</s:MXDataGridItemRenderer>
